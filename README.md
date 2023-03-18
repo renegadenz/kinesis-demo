@@ -1,5 +1,5 @@
 
-# Real-Time Data Processing with AWS Lambda, Kinesis Data Streams, and Kinesis Firehose: A Hands-On Demo for DevOps Engineers
+# Kinesis Datastream and Firehose Demo
 
 This demo has been designed to help DevOps engineers learn how to use AWS Lambda, Kinesis Data Streams, and Kinesis Firehose to build real-time data processing pipelines. By deploying these services with CloudFormation, you can automate the deployment process and gain practical experience in building complex and reliable applications. This demo also provides hands-on training that allows you to learn how to process large amounts of streaming data in real-time and store the data in a durable and scalable way. Through this training exercise, you can deepen your understanding of how these tools work and how they can be used to build more advanced applications in the future. Ultimately, this demo serves as an excellent training resource for you to expand your skills and knowledge in real-time data processing and serverless architecture, which can help you enhance your career opportunities and achieve your professional goals.
 
