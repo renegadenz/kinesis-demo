@@ -24,7 +24,7 @@ aws s3 cp index.py s3://<your-bucket-name>/
 Use the following AWS CLI command to create the CloudFormation stack:
 
 ```
-aws cloudformation create-stack --stack-name your-stack-name --template-url https://your-bucket-name.s3.amazonaws.com/kinesis.yml --parameters ParameterKey=LambdaCodeBucketName,ParameterValue=your-lambda-code-bucket-name ParameterKey=LambdaCodeObjectKey,ParameterValue=your-lambda-code-object-key
+aws cloudformation create-stack --stack-name <your-stack-name> --template-url https://<your-bucket-name>.s3.amazonaws.com/kinesis.yml --parameters ParameterKey=LambdaCodeBucketName,ParameterValue=<your-bucket-name> ParameterKey=LambdaCodeObjectKey,ParameterValue=index.py
 ```
 replace <your-bucket-name> with the name of the S3 bucket you created in step 1
 
