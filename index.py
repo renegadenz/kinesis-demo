@@ -4,13 +4,13 @@ import boto3
 kinesis = boto3.client('kinesis')
 firehose = boto3.client('firehose')
 
-stream_name = 'my-kinesis-data-stream'
-delivery_stream_name = 'my-kinesis-firehose-delivery-stream'
+stream_name = 'demo-kinesis-data-stream'
+delivery_stream_name = 'demo-kinesis-firehose-delivery-stream'
 
 def put_record(data):
     response = kinesis.put_record(
         StreamName=stream_name,
-        PartitionKey='my-key',
+        PartitionKey='demo-key',
         Data=json.dumps(data)
     )
     return response
