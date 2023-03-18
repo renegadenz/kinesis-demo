@@ -16,18 +16,16 @@ Replace your-bucket-name with your preferred bucket name, and your-bucket-region
 Upload the CloudFormation template and Python script to the S3 bucket you just created. You can use the following AWS CLI commands:
 
 ```
-aws s3 cp your-template-file.yaml s3://your-bucket-name/
-aws s3 cp your-python-file.py s3://your-bucket-name/
+aws s3 cp kinesis.yml s3://<your-bucket-name>/
+aws s3 cp index.py s3://<your-bucket-name>/
 ```
-Replace your-template-file.yaml and your-python-file.py with the names of your CloudFormation template file and Python script file, respectively.
 
 Use the following AWS CLI command to create the CloudFormation stack:
 
 ```
-aws cloudformation create-stack --stack-name your-stack-name --template-url https://your-bucket-name.s3.amazonaws.com/your-template-file.yaml --parameters 
+aws cloudformation create-stack --stack-name your-stack-name --template-url https://your-bucket-name.s3.amazonaws.com/kinesis.yml --parameters ParameterKey=LambdaCodeBucketName,ParameterValue=your-lambda-code-bucket-name ParameterKey=LambdaCodeObjectKey,ParameterValue=your-lambda-code-object-key
 ```
-ParameterKey=LambdaCodeBucketName,ParameterValue=your-lambda-code-bucket-name ParameterKey=LambdaCodeObjectKey,ParameterValue=your-lambda-code-object-key
-Replace your-stack-name, your-bucket-name, your-template-file.yaml, your-lambda-code-bucket-name, and your-lambda-code-object-key with your preferred values.
+replace <your-bucket-name> with the name of the S3 bucket you created in step 1
 
 Wait for the CloudFormation stack to complete the creation process. You can use the following AWS CLI command to check the stack status:
 
