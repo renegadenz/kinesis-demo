@@ -1,75 +1,100 @@
----
-AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   LambdaCodeBucketName:
     Type: String
-    Description: Name of the S3 bucket where the Lambda function code is stored
   LambdaCodeObjectKey:
     Type: String
-    Description: S3 object key for the Lambda function code
+
 Resources:
-  LambdaFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: demo-lambda-function
-      Runtime: python3.9
-      Handler: index.handler
-      Code:
-        S3Bucket: !Ref LambdaCodeBucketName
-        S3Key: !Ref LambdaCodeObjectKey
-      Role: !GetAtt LambdaRole.Arn
-      Environment:
-        Variables:
-          STREAM_NAME: !Ref KinesisDataStream
-      Timeout: 30
-  LambdaRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: demo-lambda-role
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-        - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
   KinesisDataStream:
-    Type: AWS::Kinesis::Stream
+    Type: "AWS::Kinesis::Stream"
     Properties:
       Name: demo-kinesis-data-stream
       ShardCount: 1
+
+  DemoLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: demo-kinesis-demo-lambda
+      Handler: index.lambda_handler
+      Role: !GetAtt DemoLambdaExecutionRole.Arn
+      Runtime: python3.8
+      Timeout: 30
+      Code:
+        S3Bucket: !Ref LambdaCodeBucketName
+        S3Key: !Ref LambdaCodeObjectKey
+      Environment:
+        Variables:
+          STREAM_NAME: !Ref KinesisDataStream
+
+  DemoLambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "root"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: "Allow"
+                Action:
+                  - "kinesis:PutRecord"
+                Resource: !GetAtt KinesisDataStream.Arn
+
   KinesisFirehoseDeliveryStream:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
       DeliveryStreamName: demo-kinesis-firehose-delivery-stream
-      KinesisStreamSourceConfiguration:
-        KinesisStreamARN: !GetAtt KinesisDataStream.Arn
+      S3DestinationConfiguration:
+        BucketARN: !GetAtt DemoFirehoseBucket.Arn
         RoleARN: !GetAtt FirehoseRole.Arn
-      ExtendedS3DestinationConfiguration:
-        RoleARN: !GetAtt FirehoseRole.Arn
-        BucketARN: !GetAtt FirehoseBucket.Arn
-        Prefix: "demo-kinesis-firehose-"
-        ErrorOutputPrefix: "demo-kinesis-firehose-errors-"
+        Prefix: 'firehose-data/'
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 5
+        CompressionFormat: UNCOMPRESSED
+
+  DemoFirehoseBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'demo-kinesis-demo-${AWS::CloudFormation::StackName}-bucket'
+      AccessControl: Private
+
   FirehoseRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: demo-firehose-role
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
               Service: firehose.amazonaws.com
             Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonKinesisFirehoseServiceRole
-  FirehoseBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: demo-firehose-bucket
-      AccessControl: Private
-      VersioningConfiguration:
-        Status: Enabled
+      Path: /
+      Policies:
+        - PolicyName: firehose-to-s3
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:AbortMultipartUpload
+                  - s3:GetBucketLocation
+                  - s3:GetObject
+                  - s3:ListBucket
+                  - s3:ListBucketMultipartUploads
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt DemoFirehoseBucket.Arn
+                  - !Sub '${DemoFirehoseBucket.Arn}/*'
