@@ -9,7 +9,7 @@ here are the CLI commands you can use to deploy the AWS Lambda function with Kin
 Create an S3 bucket where you can upload the CloudFormation template and Python script. You can use the following AWS CLI command:
 
 ```
-aws s3api create-bucket --bucket your-bucket-name --region your-bucket-region --create-bucket-configuration LocationConstraint=your-bucket-region
+aws s3 mb s3://<your-bucket-name> --region <your-preferred-region>
 ```
 Replace your-bucket-name with your preferred bucket name, and your-bucket-region with the AWS region where you want to create the bucket.
 
