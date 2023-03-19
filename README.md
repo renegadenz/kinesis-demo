@@ -37,6 +37,7 @@ aws cloudformation create-stack --stack-name <your-stack-name> --template-body f
 aws cloudformation describe-stacks --stack-name <your-stack-name>
 ```
 Replace <your-stack-name> with the name of your CloudFormation stack.
+
 5. Once the stack creation is complete, you can use the following AWS CLI command to publish data to the Kinesis Data Stream:
 
 
