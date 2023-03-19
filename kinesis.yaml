@@ -71,11 +71,19 @@ Resources:
           LogGroupName: !Ref FirehoseLogGroup
           Enabled: true
           LogStreamName: "KinesisFirehoseDeliveryStream"
+        
   FirehoseLogGroup:
-    Type: AWS::Logs::LogGroup
+    Type: "AWS::Logs::LogGroup"
     Properties:
-      LogGroupName: /aws/kinesisfirehose/demo-kinesis-firehose-delivery-stream
-      RetentionInDays: 30          
+      LogGroupName: "/aws/kinesisfirehose/demo-kinesis-firehose-delivery-stream"
+      RetentionInDays: 7
+
+  FirehoseLogStream:
+    Type: "AWS::Logs::LogStream"
+    Properties:
+      LogGroupName: "/aws/kinesisfirehose/demo-kinesis-firehose-delivery-stream"
+      LogStreamName: "KinesisFirehoseDeliveryStream"
+
   FirehoseRole:
     Type: AWS::IAM::Role
     Properties:
