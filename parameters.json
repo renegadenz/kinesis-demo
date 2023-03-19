@@ -1,0 +1,15 @@
+[
+    {
+      "ParameterKey": "LambdaCodeBucketName",
+      "ParameterValue": "your-lambda-code-bucket-name"
+    },
+    {
+      "ParameterKey": "LambdaCodeObjectKey",
+      "ParameterValue": "your-lambda-code-object-key"
+    },
+    {
+      "ParameterKey": "FirehoseBucketName",
+      "ParameterValue": "your-firehose-bucket-name"
+    }
+  ]
+  
