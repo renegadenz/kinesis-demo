@@ -39,6 +39,7 @@ Resources:
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonKinesisFullAccess'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonKinesisFirehoseFullAccess'
   KinesisDataStream:
     Type: AWS::Kinesis::Stream
     Properties:
