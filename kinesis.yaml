@@ -44,6 +44,13 @@ Resources:
     Properties:
       Name: demo-kinesis-data-stream
       ShardCount: 1
+  KinesisEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt KinesisDataStream.Arn
+      FunctionName: !GetAtt LambdaFunction.Arn
+      BatchSize: 100
+      StartingPosition: LATEST
   KinesisFirehoseDeliveryStream:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
@@ -69,6 +76,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonKinesisFirehoseFullAccess'
+
   FirehoseBucket:
     Type: AWS::S3::Bucket
     Properties:

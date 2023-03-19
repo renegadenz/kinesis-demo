@@ -19,7 +19,8 @@ Replace <your-code-bucket-name> with your preferred bucket name, and <your-prefe
 2. Upload the CloudFormation template and Python script to the S3 bucket you just created. You can use the following AWS CLI commands:
 
 ```
-aws s3 cp index.py s3://<your-code-bucket-name>/
+zip function.zip index.py
+aws s3 cp function.zip s3://<your-code-bucket-name>/
 ```
 
 3.  Deploy the CloudFormation stack using the AWS CLI command:
@@ -40,7 +41,7 @@ Replace <your-stack-name> with the name of your CloudFormation stack.
 
 
 ```
-aws kinesis put-record --stream-name <your-kinesis-stream-name> --partition-key <your-partition-key> --data "your-data"
+aws kinesis put-record --stream-name demo-kinesis-data-stream --partition-key "<your-partition-key>" --data "$(echo -n '<your-data>' | base64)"
 ```
 Replace <your-kinesis-stream-name>, <your-partition-key>, and your-data with your preferred values.
 
