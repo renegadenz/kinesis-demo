@@ -4,7 +4,7 @@ import json
 kinesis = boto3.client('kinesis')
 
 stream_name = 'demo-kinesis-data-stream'
-partition_key = 'your-partition-key'
+partition_key = 'test-data'
 message = 'Hello, Kinesis!'
 
 response = kinesis.put_record(

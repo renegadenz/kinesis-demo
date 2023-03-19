@@ -18,6 +18,9 @@ def handler(event, context):
         data = json.loads(payload)
         # Process the record
         process_record(data)
+        
+        # Put the payload in the delivery stream
+        put_record_to_delivery_stream(payload)
 
 def process_record(record):
     # TODO: process the record
@@ -26,3 +29,12 @@ def process_record(record):
 def process_records(records):
     for record in records:
         process_record(record)
+        
+def put_record_to_delivery_stream(payload):
+    response = firehose.put_record(
+        DeliveryStreamName=delivery_stream_name,
+        Record={
+            'Data': payload
+        }
+    )
+    print(f"Response from Kinesis Firehose: {response}")

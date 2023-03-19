@@ -59,10 +59,22 @@ Resources:
         KinesisStreamARN: !GetAtt KinesisDataStream.Arn
         RoleARN: !GetAtt FirehoseRole.Arn
       ExtendedS3DestinationConfiguration:
-        RoleARN: !GetAtt FirehoseRole.Arn
         BucketARN: !GetAtt FirehoseBucket.Arn
-        Prefix: "demo-kinesis-firehose-"
-        ErrorOutputPrefix: "demo-kinesis-firehose-errors-"
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "kinesis-firehose-data/"
+        BufferingHints:
+          SizeInMBs: 5
+          IntervalInSeconds: 300
+        CompressionFormat: "UNCOMPRESSED"
+        CloudWatchLoggingOptions:
+          LogGroupName: !Ref FirehoseLogGroup
+          Enabled: true
+          LogStreamName: "KinesisFirehoseDeliveryStream"
+  FirehoseLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/kinesisfirehose/demo-kinesis-firehose-delivery-stream
+      RetentionInDays: 30          
   FirehoseRole:
     Type: AWS::IAM::Role
     Properties:

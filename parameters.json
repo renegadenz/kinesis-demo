@@ -5,11 +5,10 @@
     },
     {
       "ParameterKey": "LambdaCodeObjectKey",
-      "ParameterValue": "your-lambda-code-object-key"
+      "ParameterValue": "function.zip"
     },
     {
       "ParameterKey": "FirehoseBucketName",
       "ParameterValue": "your-firehose-bucket-name"
     }
   ]
-  
